@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Logs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#0B1120] text-white p-6">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-2xl font-bold text-blue-400 mb-4"><i class="fas fa-history"></i> System Audit Logs</h1>
+        <a href="/" class="text-gray-400 text-sm mb-4 block">← Back to Dashboard</a>
+        
+        <div class="bg-[#1F2937] rounded-xl p-4 overflow-x-auto">
+            <table class="w-full text-sm text-left">
+                <thead class="text-gray-400 border-b border-gray-700">
+                    <tr>
+                        <th class="p-3">User</th>
+                        <th class="p-3">Action</th>
+                        <th class="p-3">Description</th>
+                        <th class="p-3">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr class="border-b border-gray-700/50 hover:bg-gray-800/50">
+                        <td class="p-3 font-medium text-white">
+                            {% if log.user %}
+                                {{ log.user.username }}
+                            {% else %}
+                                <span class="text-gray-500">System / Deleted</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-3 text-blue-400">{{ log.action }}</td>
+                        <td class="p-3 text-gray-300">{{ log.description }}</td>
+                        <td class="p-3 text-gray-400 text-sm">{{ log.timestamp }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="p-6 text-center text-gray-500">No audit logs available yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

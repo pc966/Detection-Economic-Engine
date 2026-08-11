@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Detection Rule</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#0B1120] text-white min-h-screen flex items-center justify-center p-6">
+    <div class="bg-[#1F2937] rounded-xl border border-gray-700 p-8 w-full max-w-2xl shadow-2xl">
+        
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-blue-400"><i class="fas fa-plus-circle mr-2"></i> Add New Rule</h2>
+            <a href="/" class="text-gray-400 hover:text-gray-200 text-sm"><i class="fas fa-arrow-left mr-1"></i> Back to Dashboard</a>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-3 rounded text-sm {% if category == 'error' %}bg-red-900/50 border border-red-500/50 text-red-200{% else %}bg-green-900/50 border border-green-500/50 text-green-200{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="space-y-4">
+            
+            <!-- Rule Name -->
+            <div>
+                <label class="block text-sm text-gray-400 mb-1">Rule Name</label>
+                <input type="text" name="name" required placeholder="e.g. Brute Force SSH"
+                    class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-blue-500 transition">
+            </div>
+            
+            <!-- 🚀 NEW: Category & MITRE Technique -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Category</label>
+                    <select name="category" class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white">
+                        <option value="General">General</option>
+                        <option value="Authentication">Authentication</option>
+                        <option value="Malware/Ransomware">Malware/Ransomware</option>
+                        <option value="Network Security">Network Security</option>
+                        <option value="Endpoint Security">Endpoint Security</option>
+                        <option value="Privilege Abuse">Privilege Abuse</option>
+                        <option value="Data Loss Prevention (DLP)">Data Loss Prevention (DLP)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">MITRE Technique (ID)</label>
+                    <input type="text" name="mitre_technique" placeholder="e.g. T1110, T1046" class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-blue-500">
+                </div>
+            </div>
+
+            <!-- 🚀 NEW: Severity & Priority -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Severity</label>
+                    <select name="severity" class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Priority (1=High, 5=Low)</label>
+                    <select name="priority" class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white">
+                        <option value="1">1 - Critical</option>
+                        <option value="2">2 - High</option>
+                        <option value="3" selected>3 - Medium</option>
+                        <option value="4">4 - Low</option>
+                        <option value="5">5 - Very Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label class="block text-sm text-gray-400 mb-1">Description (Optional)</label>
+                <textarea name="description" rows="2" placeholder="Describe the rule and what it detects..." class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white focus:outline-none focus:border-blue-500"></textarea>
+            </div>
+
+            <!-- Economics Fields -->
+            <div class="border-t border-gray-600 pt-4 mt-2">
+                <p class="text-xs text-gray-400 mb-3 uppercase tracking-wider">Economics & Performance Metrics</p>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Attack Frequency</label>
+                        <select name="attack_frequency" class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white">
+                            <option value="Rare">Rare</option>
+                            <option value="Occasional">Occasional</option>
+                            <option value="Common" selected>Common</option>
+                            <option value="Very Common">Very Common</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Asset Criticality</label>
+                        <select name="asset_criticality" class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Critical" selected>Critical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Detection Accuracy (%)</label>
+                        <input type="number" step="0.1" name="detection_accuracy" value="90.0" required class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">False Positive Rate (%)</label>
+                        <input type="number" step="0.1" name="false_positive_rate" value="5.0" required class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white">
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm text-gray-400 mb-1">Maintenance Hours (Monthly)</label>
+                    <input type="number" step="0.1" name="maintenance_hours" value="2.0" required class="w-full bg-[#111827] border border-gray-600 rounded p-2 text-white">
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded transition shadow-lg shadow-blue-900/20 mt-4">
+                <i class="fas fa-save mr-2"></i> Save Rule
+            </button>
+        </form>
+    </div>
+</body>
+</html>
