@@ -65,3 +65,4 @@ def create_app():
             print("📧 Email Alerts & AI Learning Active!")
 
     return app
+    app = create_app()
