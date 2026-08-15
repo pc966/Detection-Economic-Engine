@@ -7,7 +7,8 @@
 
 > A professional SOC (Security Operations Center) decision support system that applies economic principles to optimize detection rule portfolios.
 
-<img width="960" height="504" alt="Screenshot 2026-08-15 121727" src="https://github.com/user-attachments/assets/922bde42-b438-439c-ac5e-ece7b27695d6" />
+<img width="960" height="418" alt="Screenshot 2026-08-15 121727" src="https://github.com/user-attachments/assets/2ba87315-6ee1-4024-b842-867e04fdc6ac" />
+
 
 
 ## 📊 Overview
@@ -66,7 +67,7 @@ OR
 ## 📸 Screenshots
 
 ### Dashboard
-![Dashboard]<img width="960" height="504" alt="Screenshot 2026-08-15 121727" src="https://github.com/user-attachments/assets/f62f18ed-80f4-4053-b709-98d0e23c0b9b" />
+<img width="960" height="418" alt="Screenshot 2026-08-15 121727" src="https://github.com/user-attachments/assets/b4a10d01-3ed4-4679-a81f-9fc3e9d7ba9c" />
 
 
 ### Reports & Analytics
