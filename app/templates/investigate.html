@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Investigate - Detection Economics{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-blue-400"><i class="fas fa-search mr-2"></i> Investigating: {{ rule.name }}</h1>
+        <a href="{{ referer if referer else url_for('main.dashboard') }}" class="text-gray-400 hover:text-gray-200 transition flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+    
+    <!-- Rule Stats -->
+    <div class="bg-[#1F2937] p-4 rounded-lg border border-gray-700 mb-6 flex flex-wrap gap-6 text-sm">
+        <span><i class="fas fa-star text-yellow-400 mr-2"></i>Score: <b>{{ rule.score }}</b></span>
+        <span><i class="fas fa-info-circle text-blue-400 mr-2"></i>Recommendation: <b>{{ rule.recommendation }}</b></span>
+        <span><i class="fas fa-bullseye text-green-400 mr-2"></i>Accuracy: <b>{{ rule.detection_accuracy }}%</b></span>
+        <span><i class="fas fa-bug text-red-400 mr-2"></i>FP Rate: <b>{{ rule.false_positive_rate }}%</b></span>
+        <span><i class="fas fa-tag text-purple-400 mr-2"></i>MITRE: <b>{{ rule.mitre_technique }}</b></span>
+        <span><i class="fas fa-folder text-gray-400 mr-2"></i>Category: <b>{{ rule.category }}</b></span>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- 🧠 HISTORICAL LEARNING SECTION - NEW -->
+    <!-- ========================================================== -->
+    {% if learning_insights %}
+    <div class="bg-gradient-to-r from-amber-900/20 to-yellow-900/20 border border-amber-700 p-6 rounded-xl mb-6">
+        <h3 class="font-bold text-amber-400 mb-3">
+            <i class="fas fa-history mr-2"></i> Historical Learning
+            <span class="text-xs text-gray-400 ml-2">(Knowledge Preservation)</span>
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="bg-[#111827] p-3 rounded-lg">
+                <span class="text-gray-400 text-xs">👥 Total Analysts</span>
+                <p class="text-lg font-bold text-blue-400">{{ learning_insights.expertise.total_analysts }}</p>
+            </div>
+            <div class="bg-[#111827] p-3 rounded-lg">
+                <span class="text-gray-400 text-xs">⏱️ Avg Resolution Time</span>
+                <p class="text-lg font-bold text-green-400">{{ learning_insights.expertise.avg_resolution_time }} mins</p>
+            </div>
+            <div class="bg-[#111827] p-3 rounded-lg">
+                <span class="text-gray-400 text-xs">📊 Total Investigations</span>
+                <p class="text-lg font-bold text-yellow-400">{{ learning_insights.expertise.total_investigations }}</p>
+            </div>
+        </div>
+        
+        {% if learning_insights.similar_incidents %}
+        <div class="mt-3 pt-3 border-t border-amber-700/30 text-sm">
+            <p class="text-gray-400">🔍 Found <span class="text-amber-400 font-bold">{{ learning_insights.similar_incidents }}</span> similar incidents from the same category</p>
+        </div>
+        {% endif %}
+        
+        {% if learning_insights.recommended_steps %}
+        <div class="mt-3 pt-3 border-t border-amber-700/30">
+            <p class="text-blue-400 text-sm font-bold mb-2">📋 Recommended Steps (from past successes):</p>
+            <ul class="space-y-1 text-sm">
+                {% for step in learning_insights.recommended_steps %}
+                <li class="text-gray-300">• {{ step }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if learning_insights.successful_paths %}
+        <div class="mt-3 pt-3 border-t border-amber-700/30">
+            <p class="text-purple-400 text-sm font-bold mb-2">🏆 Successful Investigation Paths:</p>
+            {% for path in learning_insights.successful_paths %}
+            <div class="bg-[#111827] p-2 rounded mb-2 text-sm">
+                <span class="text-gray-400">Steps:</span>
+                <span class="text-gray-300">{% for step in path.steps %}{{ step }}{% if not loop.last %} → {% endif %}{% endfor %}</span>
+                <span class="text-gray-500 text-xs ml-2">({{ path.time_spent }} mins)</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- AI Insights Section -->
+    {% if ai_insights and ai_insights.insights %}
+    <div class="bg-gradient-to-r from-purple-900/20 to-blue-900/20 border border-purple-700 p-6 rounded-xl mb-6">
+        <h3 class="font-bold text-purple-400 mb-3"><i class="fas fa-brain mr-2"></i> AI Insights</h3>
+        {% if ai_insights.insights is string %}
+            <p class="text-gray-300 text-sm">{{ ai_insights.insights }}</p>
+        {% elif ai_insights.insights is iterable and not ai_insights.insights is string %}
+            <ul class="space-y-2 text-sm">
+                {% for insight in ai_insights.insights %}
+                <li class="text-gray-300">• {{ insight }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-300 text-sm">No insights available yet. Start investigating to generate AI insights.</p>
+        {% endif %}
+        
+        {% if ai_insights.suggestions %}
+        <div class="mt-3 pt-3 border-t border-purple-700/30">
+            <p class="text-blue-400 text-sm font-bold mb-2">💡 AI Suggestions:</p>
+            {% if ai_insights.suggestions is string %}
+                <p class="text-gray-300 text-sm">{{ ai_insights.suggestions }}</p>
+            {% elif ai_insights.suggestions is iterable and not ai_insights.suggestions is string %}
+                <ul class="space-y-1 text-sm">
+                    {% for suggestion in ai_insights.suggestions %}
+                    <li class="text-gray-300">• {{ suggestion }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% if ai_insights.total_investigations %}
+        <div class="mt-3 pt-3 border-t border-purple-700/30 text-xs text-gray-500">
+            Based on {{ ai_insights.total_investigations }} investigations
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Smart Recommendations -->
+    {% if smart_recommendations and smart_recommendations.recommendations %}
+    <div class="bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-700 p-6 rounded-xl mb-6">
+        <h3 class="font-bold text-green-400 mb-3"><i class="fas fa-lightbulb mr-2"></i> Smart Recommendations</h3>
+        {% if smart_recommendations.recommendations is string %}
+            <p class="text-gray-300 text-sm">{{ smart_recommendations.recommendations }}</p>
+        {% elif smart_recommendations.recommendations is iterable and not smart_recommendations.recommendations is string %}
+            <ul class="space-y-1 text-sm">
+                {% for rec in smart_recommendations.recommendations %}
+                <li class="text-gray-300">{{ rec }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+        {% if smart_recommendations.metrics %}
+        <div class="mt-3 pt-3 border-t border-green-700/30 text-sm">
+            <span class="text-gray-400">📊 True Positive Rate: </span>
+            <span class="text-green-400 font-bold">{{ smart_recommendations.metrics.true_positive_rate }}%</span>
+            <span class="text-gray-400 ml-4">False Positive Rate: </span>
+            <span class="text-red-400 font-bold">{{ smart_recommendations.metrics.false_positive_rate }}%</span>
+            <span class="text-gray-400 ml-4">Total Investigations: </span>
+            <span class="text-blue-400 font-bold">{{ smart_recommendations.metrics.total_investigations }}</span>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Playbook Suggestions -->
+    {% if playbook_steps %}
+    <div class="bg-[#1F2937] p-6 rounded-xl border border-gray-700 mb-6">
+        <h3 class="font-bold mb-4"><i class="fas fa-book text-blue-400 mr-2"></i> Playbook Steps</h3>
+        <ul class="list-disc list-inside text-sm space-y-1 text-gray-300">
+            {% for step in playbook_steps %}
+            <li>{{ step }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- AI Suggestions -->
+    {% if ai_data and ai_data.suggestions %}
+    <div class="bg-gradient-to-r from-indigo-900/20 to-purple-900/20 border border-indigo-700 p-6 rounded-xl mb-6">
+        <h3 class="font-bold text-indigo-400 mb-3">
+            <i class="fas fa-robot mr-2"></i> AI-Generated Suggestions
+            <span class="text-xs text-gray-400 ml-2">(Confidence: {{ ai_data.confidence }}%)</span>
+        </h3>
+        {% if ai_data.suggestions is string %}
+            <p class="text-gray-300 text-sm">{{ ai_data.suggestions }}</p>
+        {% elif ai_data.suggestions is iterable and not ai_data.suggestions is string %}
+            <ul class="space-y-2 text-sm">
+                {% for suggestion in ai_data.suggestions %}
+                <li class="text-gray-300">{{ suggestion }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <p class="text-xs text-gray-500 mt-2">Based on {{ ai_data.total_analyzed }} past investigations</p>
+    </div>
+    {% endif %}
+
+    <!-- Log Investigation Form -->
+    <div class="bg-[#1F2937] p-6 rounded-xl border border-gray-700 mb-6">
+        <h3 class="font-bold mb-4"><i class="fas fa-pen-to-square text-blue-400 mr-2"></i> Log New Investigation</h3>
+        <form method="POST" class="space-y-3">
+            <div>
+                <label class="text-sm text-gray-400">Investigation Steps (comma separated)</label>
+                <input type="text" name="steps" placeholder="Check logs, Query SIEM, Isolate host"
+                    class="w-full bg-[#111827] border border-gray-600 rounded-lg p-2 text-white focus:outline-none focus:border-blue-500 transition">
+                <p class="text-xs text-gray-500 mt-1">💡 Tip: Use steps from the recommendations above</p>
+            </div>
+            <div>
+                <label class="text-sm text-gray-400">Notes</label>
+                <textarea name="notes" rows="2" placeholder="Additional notes..."
+                    class="w-full bg-[#111827] border border-gray-600 rounded-lg p-2 text-white focus:outline-none focus:border-blue-500 transition"></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm text-gray-400">Resolution</label>
+                    <select name="resolution" class="w-full bg-[#111827] border border-gray-600 rounded-lg p-2 text-white focus:outline-none focus:border-blue-500 transition">
+                        <option value="True_Positive">✅ True Positive</option>
+                        <option value="False_Positive">❌ False Positive</option>
+                        <option value="Benign">ℹ️ Benign</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400">Time Spent (mins)</label>
+                    <input type="number" step="0.1" name="time_spent" value="15"
+                        class="w-full bg-[#111827] border border-gray-600 rounded-lg p-2 text-white focus:outline-none focus:border-blue-500 transition">
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 rounded-lg transition shadow-lg shadow-green-900/20">
+                <i class="fas fa-save mr-2"></i> Log Investigation
+            </button>
+        </form>
+    </div>
+
+    <!-- History -->
+    <div class="bg-[#1F2937] rounded-xl border border-gray-700 overflow-hidden">
+        <div class="p-4 border-b border-gray-700 text-gray-300 font-bold flex justify-between items-center bg-[#111827]">
+            <span><i class="fas fa-history mr-2"></i> Investigation History</span>
+            <span class="text-sm text-gray-500">{{ investigations|length }} total</span>
+        </div>
+        {% if investigations %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-[#111827] text-gray-400">
+                    <tr>
+                        <th class="p-3 text-left">#</th>
+                        <th class="p-3 text-left">Analyst</th>
+                        <th class="p-3 text-left">Resolution</th>
+                        <th class="p-3 text-left">Steps</th>
+                        <th class="p-3 text-left">Time</th>
+                        <th class="p-3 text-left">Date</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-700">
+                    {% for inv in investigations %}
+                    <tr class="hover:bg-gray-800/50 transition">
+                        <td class="p-3 text-gray-500 font-mono">{{ loop.index }}</td>
+                        <td class="p-3 text-gray-300">#{{ inv.analyst_id }}</td>
+                        <td class="p-3 font-bold 
+                            {% if inv.resolution == 'True_Positive' %}text-green-400
+                            {% elif inv.resolution == 'False_Positive' %}text-red-400
+                            {% else %}text-yellow-400{% endif %}">
+                            {{ inv.resolution }}
+                        </td>
+                        <td class="p-3 text-gray-300 max-w-xs truncate">
+                            {% set steps = inv.steps|from_json %}
+                            {% if steps %}
+                                {% for step in steps %}
+                                    <span class="inline-block bg-[#111827] px-2 py-0.5 rounded text-xs text-gray-300 mr-1">{{ step }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-gray-500 text-xs">No steps recorded</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-3 text-yellow-400 font-bold">{{ inv.time_spent }} mins</td>
+                        <td class="p-3 text-gray-500 text-xs">{{ inv.created_at|format_datetime }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-8 text-center text-gray-500">
+            <i class="fas fa-inbox text-4xl opacity-20 mb-2 block"></i>
+            No investigations logged yet. Start your first investigation!
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
