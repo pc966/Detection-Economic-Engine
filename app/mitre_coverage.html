@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}MITRE ATT&CK Coverage - Detection Economics{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-blue-400"><i class="fas fa-shield-halved mr-2"></i> MITRE ATT&CK Coverage</h1>
+        <a href="/" class="text-gray-400 hover:text-gray-200 transition flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        <div class="bg-[#1F2937] p-6 rounded-xl border border-gray-700">
+            <div class="text-center">
+                <p class="text-gray-400 text-sm">Total Covered</p>
+                <p class="text-3xl font-bold text-green-400">{{ covered_count }}</p>
+                <p class="text-xs text-gray-500">MITRE Techniques</p>
+            </div>
+        </div>
+        <div class="bg-[#1F2937] p-6 rounded-xl border border-gray-700">
+            <div class="text-center">
+                <p class="text-gray-400 text-sm">Missing</p>
+                <p class="text-3xl font-bold text-red-400">{{ missing_count }}</p>
+                <p class="text-xs text-gray-500">Techniques to Add</p>
+            </div>
+        </div>
+        <div class="bg-[#1F2937] p-6 rounded-xl border border-gray-700">
+            <div class="text-center">
+                <p class="text-gray-400 text-sm">Coverage</p>
+                <p class="text-3xl font-bold text-yellow-400">{{ coverage_percentage }}%</p>
+                <p class="text-xs text-gray-500">Overall Coverage</p>
+            </div>
+        </div>
+        <div class="bg-[#1F2937] p-6 rounded-xl border border-gray-700">
+            <div class="text-center">
+                <p class="text-gray-400 text-sm">Status</p>
+                <p class="text-3xl font-bold {% if coverage_percentage >= 80 %}text-green-400{% elif coverage_percentage >= 50 %}text-yellow-400{% else %}text-red-400{% endif %}">
+                    {% if coverage_percentage >= 80 %}✅ Good{% elif coverage_percentage >= 50 %}⚠️ Medium{% else %}❌ Poor{% endif %}
+                </p>
+                <p class="text-xs text-gray-500">Coverage Level</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coverage Progress Bar -->
+    <div class="bg-[#1F2937] p-4 rounded-xl border border-gray-700 mb-6">
+        <div class="flex justify-between text-sm text-gray-400 mb-1">
+            <span>Coverage Progress</span>
+            <span>{{ coverage_percentage }}%</span>
+        </div>
+        <div class="w-full bg-[#111827] rounded-full h-3">
+            <div class="h-3 rounded-full transition-all duration-500 
+                {% if coverage_percentage >= 80 %}bg-gradient-to-r from-green-500 to-emerald-500
+                {% elif coverage_percentage >= 50 %}bg-gradient-to-r from-yellow-500 to-orange-500
+                {% else %}bg-gradient-to-r from-red-500 to-orange-500{% endif %}"
+                style="width: {{ coverage_percentage }}%">
+            </div>
+        </div>
+        <div class="flex justify-between text-xs text-gray-500 mt-1">
+            <span>0%</span>
+            <span>50%</span>
+            <span>100%</span>
+        </div>
+    </div>
+
+    <!-- Tactic Breakdown -->
+    {% if tactics_coverage %}
+    <div class="bg-[#1F2937] rounded-xl border border-gray-700 overflow-hidden mb-6">
+        <div class="p-4 border-b border-gray-700 text-gray-300 font-bold bg-[#111827]">
+            <i class="fas fa-layer-group text-blue-400 mr-2"></i> Coverage by Tactic
+        </div>
+        <div class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for tactic, data in tactics_coverage.items() %}
+            <div class="bg-[#111827] p-3 rounded-lg border border-gray-700">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-300">{{ tactic }}</span>
+                    <span class="text-xs text-gray-500">{{ data.covered }}/{{ data.total }}</span>
+                </div>
+                <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+                    <div class="h-1.5 rounded-full 
+                        {% if data.percentage >= 80 %}bg-green-500
+                        {% elif data.percentage >= 50 %}bg-yellow-500
+                        {% else %}bg-red-500{% endif %}"
+                        style="width: {{ data.percentage }}%">
+                    </div>
+                </div>
+                <span class="text-xs text-gray-500 mt-1 block">{{ data.percentage }}% covered</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Missing Detections Table -->
+    <div class="bg-[#1F2937] rounded-xl border border-gray-700 overflow-hidden">
+        <div class="p-4 border-b border-gray-700 text-gray-300 font-bold flex justify-between items-center bg-[#111827]">
+            <span><i class="fas fa-list-ul text-blue-400 mr-2"></i> Missing Detections</span>
+            <span class="text-sm text-gray-500">{{ missing_detections|length }} techniques</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-[#111827] text-gray-400">
+                    <tr>
+                        <th class="p-3 text-left">Technique ID</th>
+                        <th class="p-3 text-left">Name</th>
+                        <th class="p-3 text-left">Tactic</th>
+                        <th class="p-3 text-left">Priority</th>
+                        <th class="p-3 text-left">Recommendation</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-700">
+                    {% for tech in missing_detections %}
+                    <tr class="hover:bg-gray-800/50 transition">
+                        <td class="p-3 font-mono text-blue-400 font-bold">{{ tech.technique_id }}</td>
+                        <td class="p-3 text-white">{{ tech.name }}</td>
+                        <td class="p-3 text-gray-400">{{ tech.tactic }}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-1 text-xs rounded-full 
+                                {% if tech.priority == 'Critical' %}bg-red-900/50 text-red-400 border border-red-500/50 font-bold
+                                {% elif tech.priority == 'High' %}bg-red-900/30 text-red-400 border border-red-500/30
+                                {% elif tech.priority == 'Medium' %}bg-yellow-900/30 text-yellow-400 border border-yellow-500/30
+                                {% else %}bg-blue-900/30 text-blue-400 border border-blue-500/30{% endif %}">
+                                {{ tech.priority }}
+                            </span>
+                        </td>
+                        <td class="p-3">
+                            <a href="{{ url_for('main.add_rule') }}?mitre={{ tech.technique_id }}&name={{ tech.name|urlencode }}" 
+                               class="text-blue-400 hover:text-blue-300 transition text-sm inline-flex items-center gap-1 bg-blue-900/20 px-3 py-1 rounded-lg border border-blue-500/20 hover:bg-blue-900/40">
+                                <i class="fas fa-plus-circle"></i> Add Rule
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-green-400">
+                            <i class="fas fa-check-circle text-4xl mb-2 block"></i>
+                            <p class="text-lg font-bold">Excellent Coverage!</p>
+                            <p class="text-sm text-gray-400 mt-1">All common MITRE techniques are covered.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    {% if missing_detections %}
+    <div class="mt-6 bg-gradient-to-r from-red-900/20 to-orange-900/20 border border-red-700 p-4 rounded-xl">
+        <h4 class="text-red-400 font-bold mb-2"><i class="fas fa-exclamation-triangle mr-2"></i> Recommendations</h4>
+        <ul class="text-sm text-gray-300 space-y-1">
+            <li>• <span class="text-red-400 font-bold">{{ missing_detections|length }}</span> MITRE techniques are not covered</li>
+            <li>• Priority: Add <span class="text-red-400 font-bold">Critical</span> and <span class="text-red-400 font-bold">High</span> priority techniques first</li>
+            <li>• Focus on <span class="text-yellow-400">Initial Access</span> and <span class="text-yellow-400">Lateral Movement</span> tactics</li>
+        </ul>
+    </div>
+    {% else %}
+    <div class="mt-6 bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-700 p-4 rounded-xl">
+        <h4 class="text-green-400 font-bold mb-2"><i class="fas fa-check-circle mr-2"></i> Excellent Coverage!</h4>
+        <p class="text-sm text-gray-300">Your detection portfolio has comprehensive MITRE ATT&CK coverage.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
