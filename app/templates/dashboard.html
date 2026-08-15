@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Detection Economics{% endblock %}
+
+{% block content %}
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-[#111827] h-screen p-6 border-r border-gray-800 hidden md:block fixed">
+        <div class="flex items-center gap-3 mb-10">
+            <i class="fas fa-shield-halved text-3xl text-blue-500"></i>
+            <span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Detection Econ</span>
+        </div>
+        <nav class="space-y-4">
+            <a href="/" class="flex items-center gap-3 bg-blue-600/20 text-blue-400 px-4 py-3 rounded-lg">
+                <i class="fas fa-house"></i> Dashboard
+            </a>
+            <a href="/reports" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-lg transition">
+                <i class="fas fa-chart-pie"></i> Analytics & Reports
+            </a>
+            <a href="/my_investigations" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-lg transition">
+                <i class="fas fa-clipboard-list"></i> My Activity
+            </a>
+            {% if user.role == 'admin' %}
+            <a href="/audit_logs" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-lg transition">
+                <i class="fas fa-history"></i> Audit Logs
+            </a>
+            {% endif %}
+        </nav>
+        <div class="absolute bottom-6 left-6">
+            <a href="/auth/logout" class="text-red-400 hover:text-red-300 text-sm"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+        </div>
+        <!-- Add this in the sidebar navigation -->
+{% if user.role == 'admin' %}
+<a href="{{ url_for('auth.create_user') }}" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-lg transition">
+    <i class="fas fa-user-plus"></i> Create User
+</a>
+{% endif %}
+<a href="{{ url_for('main.mitre_coverage') }}" class="flex items-center gap-3 text-gray-400 hover:text-white hover:bg-gray-800 px-4 py-3 rounded-lg transition">
+    <i class="fas fa-shield-virus"></i> MITRE Coverage
+</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6 md:p-10 ml-0 md:ml-64">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-4 rounded-lg border 
+                        {% if category == 'success' %}bg-green-900/30 border-green-600/50 text-green-300{% elif category == 'danger' %}bg-red-900/30 border-red-600/50 text-red-300{% else %}bg-blue-900/30 border-blue-600/50 text-blue-300{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Header -->
+         <!-- Add these buttons in the header section where other buttons are -->
+<div class="flex flex-wrap gap-3">
+    <!-- Export CSV -->
+    <a href="/export.csv" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 rounded-lg shadow-md flex items-center gap-2 transition text-sm">
+        <i class="fas fa-file-csv"></i> Export CSV
+    </a>
+    
+    <!-- Import CSV -->
+    <form action="/import" method="POST" enctype="multipart/form-data" class="flex items-center gap-2 bg-[#1F2937] p-1 rounded-lg border border-gray-700">
+        <input type="file" name="file" accept=".csv" class="text-xs text-gray-400 w-28 bg-transparent p-1 file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700">
+        <button type="submit" class="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1.5 rounded text-sm transition border border-emerald-500">
+            <i class="fas fa-upload mr-1"></i> CSV
+        </button>
+    </form>
+
+    <!-- Import JSON -->
+    <form action="/import_json" method="POST" enctype="multipart/form-data" class="flex items-center gap-2 bg-[#1F2937] p-1 rounded-lg border border-purple-600/50">
+        <input type="file" name="json_file" accept=".json" class="text-xs text-gray-400 w-24 bg-transparent p-1 file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700">
+        <button type="submit" class="bg-purple-700 hover:bg-purple-600 text-white px-3 py-1.5 rounded text-sm transition border border-purple-500">
+            <i class="fas fa-code mr-1"></i> JSON
+        </button>
+    </form>
+
+    <!-- Export PDF -->
+    <a href="/export.pdf" class="bg-red-600 hover:bg-red-500 text-white px-3 py-2 rounded-lg shadow-md flex items-center gap-2 transition text-sm">
+        <i class="fas fa-file-pdf"></i> PDF
+    </a>
+    
+    <!-- Add Rule -->
+    <a href="/add_rule" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 transition">
+        <i class="fas fa-plus"></i> Add Rule
+    </a>
+</div>
+
+        <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white">Welcome back, <span class="text-blue-400">{{ user.username }}</span></h1>
+                <p class="text-gray-400 mt-1">Real-time security operations center dashboard.</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <a href="/add_rule" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 transition">
+                    <i class="fas fa-plus"></i> Add Rule
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-[#1F2937] p-6 rounded-xl border border-gray-700">
+                <div class="flex justify-between items-center"><p class="text-gray-400 text-sm">Total Rules</p><i class="fas fa-shield text-blue-400"></i></div>
+                <p class="text-2xl font-bold mt-2">{{ rules|length }}</p>
+            </div>
+            <div class="bg-[#1F2937] p-6 rounded-xl border border-gray-700">
+                <div class="flex justify-between items-center"><p class="text-gray-400 text-sm">Prioritize</p><i class="fas fa-arrow-up text-green-400"></i></div>
+                <p class="text-2xl font-bold mt-2 text-green-400">{{ prioritize }}</p>
+            </div>
+            <div class="bg-[#1F2937] p-6 rounded-xl border border-gray-700">
+                <div class="flex justify-between items-center"><p class="text-gray-400 text-sm">Monitor</p><i class="fas fa-eye text-yellow-400"></i></div>
+                <p class="text-2xl font-bold mt-2 text-yellow-400">{{ monitor }}</p>
+            </div>
+            <div class="bg-[#1F2937] p-6 rounded-xl border border-gray-700">
+                <div class="flex justify-between items-center"><p class="text-gray-400 text-sm">Retire</p><i class="fas fa-trash text-red-400"></i></div>
+                <p class="text-2xl font-bold mt-2 text-red-400">{{ retire }}</p>
+            </div>
+        </div>
+
+        <!-- Rules Table -->
+        <div class="bg-[#1F2937] rounded-xl border border-gray-700 overflow-hidden">
+            <div class="p-6 border-b border-gray-700 bg-[#111827]">
+                <h3 class="text-lg font-bold text-gray-200"><i class="fas fa-list-ul mr-2 text-blue-400"></i> Active Security Rules</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-gray-400">
+                    <thead class="text-xs uppercase bg-[#111827] text-gray-500">
+                        <tr>
+                            <th class="px-6 py-4">ID</th>
+                            <th class="px-6 py-4">Rule Name</th>
+                            <th class="px-6 py-4 text-center">Score</th>
+                            <th class="px-6 py-4 text-center">Recommendation</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700/50">
+                        {% for rule in rules %}
+                        <tr class="hover:bg-gray-800/50 transition">
+                            <td class="px-6 py-4 font-mono text-gray-500">#{{ rule.id }}</td>
+                            <td class="px-6 py-4 font-medium text-white">{{ rule.name }}</td>
+                            <td class="px-6 py-4 text-center font-bold text-yellow-400">{{ rule.score }}</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="text-xs font-bold px-3 py-1 rounded-full border
+                                    {% if rule.recommendation == 'Prioritize' %}bg-green-900/30 text-green-400 border-green-500/30
+                                    {% elif rule.recommendation == 'Retire' %}bg-red-900/30 text-red-400 border-red-500/30
+                                    {% elif rule.recommendation == 'Improve' %}bg-yellow-900/30 text-yellow-400 border-yellow-500/30
+                                    {% else %}bg-gray-700/30 text-gray-400 border-gray-600/50{% endif %}">
+                                    {{ rule.recommendation }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right flex justify-end gap-3 items-center">
+                                <a href="/investigate/{{ rule.id }}" class="text-purple-400 hover:text-purple-300 transition" title="Investigate">
+                                    <i class="fas fa-clipboard-list text-sm"></i>
+                                </a>
+                                <a href="/edit_rule/{{ rule.id }}" class="text-gray-500 hover:text-white transition" title="Edit">
+                                    <i class="fas fa-pen-to-square text-sm"></i>
+                                </a>
+                                <form action="/flag_rule/{{ rule.id }}" method="POST" onsubmit="return confirm('Flag this rule for review?');">
+                                    <button type="submit" class="text-yellow-500 hover:text-yellow-400 transition" title="Flag">
+                                        <i class="fas fa-flag text-sm"></i>
+                                    </button>
+                                </form>
+                                <form action="/delete_rule/{{ rule.id }}" method="POST" onsubmit="return confirm('Delete this rule?');">
+                                    <button type="submit" class="text-red-500 hover:text-red-400 transition" title="Delete">
+                                        <i class="fas fa-trash text-sm"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="5" class="px-6 py-12 text-center text-gray-500">No rules added yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
