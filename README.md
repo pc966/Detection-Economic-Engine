@@ -71,19 +71,19 @@ OR
 
 
 ### Reports & Analytics
-![Reports]<img width="960" height="476" alt="Screenshot 2026-08-15 121750" src="https://github.com/user-attachments/assets/42c99491-4fb8-4131-9800-fb7ec4f831d1" />
+<img width="960" height="476" alt="Screenshot 2026-08-15 121750" src="https://github.com/user-attachments/assets/42c99491-4fb8-4131-9800-fb7ec4f831d1" />
 
 
 ### My Investigations
-![Investigations]<img width="955" height="413" alt="image" src="https://github.com/user-attachments/assets/111647b8-af2f-4523-bd47-b10b5b56fdeb" />
+<img width="955" height="413" alt="image" src="https://github.com/user-attachments/assets/111647b8-af2f-4523-bd47-b10b5b56fdeb" />
 
 
 ### MITRE ATT&CK Coverage
-![MITRE Coverage]<img width="960" height="477" alt="Screenshot 2026-08-15 121836" src="https://github.com/user-attachments/assets/1f98d371-1c57-45f9-889c-14bbdde7ebc4" />
+<img width="960" height="477" alt="Screenshot 2026-08-15 121836" src="https://github.com/user-attachments/assets/1f98d371-1c57-45f9-889c-14bbdde7ebc4" />
 
 
 ### Missing Detections
-![Missing Detections]<img width="960" height="418" alt="Screenshot 2026-08-15 121855" src="https://github.com/user-attachments/assets/3c76765f-2bce-4be7-ab5c-22cdbc2eed1e" />
+<img width="960" height="418" alt="Screenshot 2026-08-15 121855" src="https://github.com/user-attachments/assets/3c76765f-2bce-4be7-ab5c-22cdbc2eed1e" />
 
 
 ### Audit Logs
@@ -91,7 +91,7 @@ OR
 
 
 ### User Management
-![User Management]<img width="960" height="475" alt="Screenshot 2026-08-15 121930" src="https://github.com/user-attachments/assets/c915bf8e-8de3-4aaf-8bbe-2025c156f526" />
+<img width="960" height="475" alt="Screenshot 2026-08-15 121930" src="https://github.com/user-attachments/assets/c915bf8e-8de3-4aaf-8bbe-2025c156f526" />
 
 
 ---
