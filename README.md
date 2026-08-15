@@ -74,20 +74,24 @@ OR
 
 
 ### My Investigations
-![Investigations]
+![Investigations]<img width="955" height="413" alt="image" src="https://github.com/user-attachments/assets/111647b8-af2f-4523-bd47-b10b5b56fdeb" />
+
 
 ### MITRE ATT&CK Coverage
 ![MITRE Coverage]<img width="960" height="477" alt="Screenshot 2026-08-15 121836" src="https://github.com/user-attachments/assets/1f98d371-1c57-45f9-889c-14bbdde7ebc4" />
 
 
 ### Missing Detections
-![Missing Detections](screenshots/5-missing-detections.png)
+![Missing Detections]<img width="960" height="418" alt="Screenshot 2026-08-15 121855" src="https://github.com/user-attachments/assets/3c76765f-2bce-4be7-ab5c-22cdbc2eed1e" />
+
 
 ### Audit Logs
-![Audit Logs](screenshots/6-audit-logs.png)
+![Audit Logs]<img width="960" height="476" alt="Screenshot 2026-08-15 121912" src="https://github.com/user-attachments/assets/c0a3b589-3941-43f7-8b75-e1081906754d" />
+
 
 ### User Management
-![User Management](screenshots/7-user-management.png)
+![User Management]<img width="960" height="475" alt="Screenshot 2026-08-15 121930" src="https://github.com/user-attachments/assets/c915bf8e-8de3-4aaf-8bbe-2025c156f526" />
+
 
 ---
 
