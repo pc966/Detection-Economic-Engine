@@ -1,0 +1,8 @@
+name,category,severity,mitre_technique,attack_frequency,asset_criticality,detection_accuracy,false_positive_rate,maintenance_hours,description
+Multiple Failed Login Attempts,Authentication,High,T1110,Very Common,Critical,98.5,1.5,1.5,Detects multiple failed login attempts
+Suspicious Outbound Traffic,Network Security,High,T1048,Common,High,92.0,5.0,2.0,Detects suspicious outbound network traffic
+Data Exfiltration Attempt,DLP,Critical,T1048,Common,Critical,98.5,1.5,2.5,Detects potential data exfiltration
+Suspicious PowerShell Activity,Endpoint Security,High,T1059,Common,High,92.0,5.0,1.5,Detects suspicious PowerShell command line activity
+Firewall Rule Change,Network Security,Critical,T1562,Very Common,Critical,98.5,1.5,2.0,Detects firewall rule changes
+Default Credentials Usage,Authentication,Medium,T1078,Occasional,Medium,85.0,10.0,1.0,Detects default credential usage
+Ransomware Pattern,Malware,Ransomware,Critical,T1486,Very Common,Critical,98.5,1.5,3.0,Detects mass file encryption patterns

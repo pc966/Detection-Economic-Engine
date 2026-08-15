@@ -1,0 +1,49 @@
+{
+  "soc_rules": [
+    {
+      "rule_name": "Multiple Failed Login Attempts",
+      "category": "Authentication",
+      "severity": "High",
+      "mitre_attack": {
+        "technique_id": "T1110"
+      },
+      "description": "Detects multiple failed login attempts indicating brute force attack",
+      "priority": 2,
+      "attack_frequency": "Very Common",
+      "asset_criticality": "Critical",
+      "detection_accuracy": 98.5,
+      "false_positive_rate": 1.5,
+      "maintenance_hours": 1.5
+    },
+    {
+      "rule_name": "Suspicious Outbound Traffic",
+      "category": "Network Security",
+      "severity": "High",
+      "mitre_attack": {
+        "technique_id": "T1048"
+      },
+      "description": "Detects suspicious outbound network traffic patterns",
+      "priority": 2,
+      "attack_frequency": "Common",
+      "asset_criticality": "High",
+      "detection_accuracy": 92.0,
+      "false_positive_rate": 5.0,
+      "maintenance_hours": 2.0
+    },
+    {
+      "rule_name": "Data Exfiltration Attempt",
+      "category": "Data Loss Prevention",
+      "severity": "Critical",
+      "mitre_attack": {
+        "technique_id": "T1048"
+      },
+      "description": "Detects potential data exfiltration attempts",
+      "priority": 1,
+      "attack_frequency": "Common",
+      "asset_criticality": "Critical",
+      "detection_accuracy": 98.5,
+      "false_positive_rate": 1.5,
+      "maintenance_hours": 2.5
+    }
+  ]
+}
