@@ -87,7 +87,7 @@ OR
 
 
 ### Audit Logs
-![Audit Logs]<img width="960" height="476" alt="Screenshot 2026-08-15 121912" src="https://github.com/user-attachments/assets/c0a3b589-3941-43f7-8b75-e1081906754d" />
+<img width="960" height="476" alt="Screenshot 2026-08-15 121912" src="https://github.com/user-attachments/assets/c0a3b589-3941-43f7-8b75-e1081906754d" />
 
 
 ### User Management
